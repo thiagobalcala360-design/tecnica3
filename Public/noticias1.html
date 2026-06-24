@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Noticias - EEST Nº3 Islas Malvinas</title>
+
+<link rel="stylesheet" href="Styles/hi.css">
+
+<style>
+
+/* ==================== PANCARTA login ==================== */
+
+#pancarta{
+    width:100%;
+    max-width:1500px;
+    margin:50px auto;
+    padding:20px;
+}
+
+#pancarta h2{
+    text-align:center;
+    margin-bottom:30px;
+    font-size:2.5rem;
+}
+
+.cuadro{
+    width:100%;
+    margin:auto;
+    border-collapse:collapse;
+    background:white;
+    border:14px double var(--accent-blue);
+    box-shadow:0 20px 45px rgba(10,24,40,.3);
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.cuadro td{
+    width:50%;
+    padding:40px 25px;
+    border:10px double var(--accent-blue);
+    background:linear-gradient(
+        180deg,
+        rgba(255,255,255,.96),
+        rgba(240,245,250,.92)
+    );
+
+    text-align:center;
+    vertical-align:top;
+
+    transition:.3s;
+}
+
+.cuadro td:hover{
+    background:linear-gradient(
+        180deg,
+        var(--accent-gold),
+        #f0d9a0
+    );
+}
+
+.cuadro td img{
+    display:block;
+    width:100%;
+    max-width:500px;
+    height:300px;
+    object-fit:cover;
+
+    margin:0 auto 20px auto;
+
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+.panel-titulo{
+    text-align:center;
+    font-size:2rem;
+    color:var(--accent-blue);
+    margin:15px auto;
+}
+
+.panel-texto{
+    text-align:center;
+    font-size:1.15rem;
+    line-height:1.7;
+    color:#333;
+
+    max-width:500px;
+    margin:auto;
+
+    word-wrap:break-word;
+    overflow-wrap:break-word;
+}
+
+/* ==================== BOTON FLOTANTE LOGIN ==================== */
+
+#abrirLogin{
+    position:fixed;
+    bottom:28px;
+    right:28px;
+    z-index:900;
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    padding:14px 22px;
+    background:var(--accent-blue);
+    color:#fff;
+    font-size:.95rem;
+    font-weight:700;
+    border:none;
+    border-radius:50px;
+    cursor:pointer;
+    box-shadow:0 10px 25px rgba(10,24,40,.35);
+    transition:.25s background,.2s transform;
+}
+
+#abrirLogin:hover{
+    background:var(--accent-gold);
+    color:#1a1a1a;
+    transform:translateY(-2px);
+}
+
+#abrirLogin svg{
+    width:18px;
+    height:18px;
+    flex-shrink:0;
+}
+
+/* ==================== MODAL LOGIN / REGISTRO ==================== */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(10,20,35,.55);
+    backdrop-filter:blur(3px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:1000;
+
+    opacity:0;
+    visibility:hidden;
+    transition:.25s opacity;
+}
+
+.modal-overlay.abierto{
+    opacity:1;
+    visibility:visible;
+}
+
+.modal-login{
+    position:relative;
+    width:100%;
+    max-width:380px;
+
+    background:linear-gradient(
+        180deg,
+        rgba(255,255,255,.98),
+        rgba(240,245,250,.96)
+    );
+    border:10px double var(--accent-blue);
+    border-radius:18px;
+    box-shadow:0 25px 60px rgba(0,0,0,.35);
+    padding:32px 26px;
+
+    transform:scale(.92) translateY(10px);
+    transition:.25s transform;
+}
+
+.modal-overlay.abierto .modal-login{
+    transform:scale(1) translateY(0);
+}
+
+.modal-cerrar{
+    position:absolute;
+    top:10px;
+    right:14px;
+    background:none;
+    border:none;
+    font-size:1.4rem;
+    line-height:1;
+    color:#888;
+    cursor:pointer;
+    padding:4px;
+    z-index:5;
+}
+
+.modal-cerrar:hover{
+    color:var(--accent-blue);
+}
+
+.vista.oculta{
+    display:none;
+}
+
+.modal-login h2{
+    text-align:center;
+    font-size:1.5rem;
+    margin:0 0 6px;
+    color:var(--accent-blue);
+}
+
+.modal-login p.subtitulo{
+    text-align:center;
+    color:#666;
+    font-size:.9rem;
+    margin:0 0 22px;
+}
+
+.campo{
+    margin-bottom:16px;
+}
+
+.campo label{
+    display:block;
+    font-size:.82rem;
+    font-weight:600;
+    color:var(--accent-blue);
+    margin-bottom:5px;
+}
+
+.campo-wrap{
+    position:relative;
+}
+
+.campo input[type="text"],
+.campo input[type="password"]{
+    width:100%;
+    padding:11px 13px;
+    border:2px solid #d8e0e8;
+    border-radius:9px;
+    font-size:.92rem;
+    color:#222;
+    background:#fff;
+    outline:none;
+    box-sizing:border-box;
+    transition:.2s border-color,.2s box-shadow;
+}
+
+.campo input::placeholder{
+    color:#9aa3ad;
+}
+
+.campo input:focus{
+    border-color:var(--accent-blue);
+    box-shadow:0 0 0 4px rgba(28,78,128,.12);
+}
+
+.campo input.invalido{
+    border-color:#d9534f;
+}
+
+.toggle-pass{
+    position:absolute;
+    right:8px;
+    top:50%;
+    transform:translateY(-50%);
+    background:none;
+    border:none;
+    color:var(--accent-blue);
+    font-size:.75rem;
+    font-weight:600;
+    cursor:pointer;
+    padding:4px 6px;
+}
+
+.toggle-pass:hover{
+    text-decoration:underline;
+}
+
+.error-msg{
+    color:#d9534f;
+    font-size:.75rem;
+    margin-top:5px;
+    min-height:13px;
+}
+
+.btn-login{
+    width:100%;
+    padding:12px;
+    margin-top:8px;
+    background:var(--accent-blue);
+    color:#fff;
+    font-weight:700;
+    font-size:.95rem;
+    border:none;
+    border-radius:9px;
+    cursor:pointer;
+    transition:.25s background,.15s transform;
+}
+
+.btn-login:hover:not(:disabled){
+    background:var(--accent-gold);
+    color:#1a1a1a;
+}
+
+.btn-login:active:not(:disabled){
+    transform:scale(.99);
+}
+
+.btn-login:disabled{
+    background:#c7ccd1;
+    color:#888;
+    cursor:not-allowed;
+}
+
+.feedback-form{
+    margin-top:14px;
+    font-size:.85rem;
+    text-align:center;
+    min-height:16px;
+    font-weight:600;
+}
+
+.feedback-form.exito{ color:#3c9a5f; }
+.feedback-form.error{ color:#d9534f; }
+
+.cambiar-vista{
+    text-align:center;
+    font-size:.82rem;
+    color:#666;
+    margin-top:16px;
+}
+
+.link-vista{
+    background:none;
+    border:none;
+    color:var(--accent-blue);
+    font-weight:700;
+    font-size:.82rem;
+    cursor:pointer;
+    padding:0;
+    text-decoration:underline;
+}
+
+.link-vista:hover{
+    color:var(--accent-gold);
+}
+
+.aviso{
+    margin-top:18px;
+    padding-top:14px;
+    border-top:2px dashed #d8e0e8;
+    font-size:.72rem;
+    color:#888;
+    line-height:1.5;
+    text-align:center;
+}
+
+/* ==================== CELULAR ==================== */
+
+@media (max-width:768px){
+
+    #pancarta{
+        padding:10px;
+    }
+
+    #pancarta h2{
+        font-size:2rem;
+    }
+
+    .cuadro,
+    .cuadro tbody,
+    .cuadro tr,
+    .cuadro td{
+        display:block;
+        width:100%;
+    }
+
+    .cuadro td{
+        padding:25px 15px;
+        box-sizing:border-box;
+    }
+
+    .cuadro td img{
+        width:100%;
+        max-width:320px;
+        height:220px;
+        margin:auto;
+    }
+
+    .panel-titulo{
+        font-size:1.4rem;
+    }
+
+    .panel-texto{
+        max-width:320px;
+        width:100%;
+        font-size:1rem;
+        margin:15px auto 0 auto;
+    }
+
+    #abrirLogin{
+        bottom:18px;
+        right:18px;
+        padding:12px 18px;
+        font-size:.88rem;
+    }
+
+    #abrirLogin span{
+        display:none;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+    <div class="container header-container">
+
+        <img src="Assets/tecnica3.jpg"
+             alt="Logo del colegio"
+             class="logo">
+
+        <h1>EEST Nº3 "Islas Malvinas"</h1>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="galeria.html">Galería</a></li>
+                <li><a href="noticias.html" class="is-active">Noticias</a></li>
+                <li><a href="CONTACTO.HTML">Contacto</a></li>
+            </ul>
+        </nav>
+
+    </div>
+</header>
+
+<section id="pancarta">
+
+    <h2>Pancarta de Noticias</h2>
+
+    <table class="cuadro">
+
+        <tr>
+            <td id="celda1"></td>
+            <td id="celda2"></td>
+        </tr>
+
+        <tr>
+            <td id="celda3"></td>
+            <td id="celda4"></td>
+        </tr>
+
+    </table>
+
+</section>
+
+<!-- Boton flotante que abre el login / cierra sesion -->
+<button id="abrirLogin" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+        <polyline points="10 17 15 12 10 7"></polyline>
+        <line x1="15" y1="12" x2="3" y2="12"></line>
+    </svg>
+    <span id="textoBtnLogin">Iniciar sesión</span>
+</button>
+
+<!-- Modal de login / registro -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-login">
+
+        <button class="modal-cerrar" id="cerrarLogin" type="button" aria-label="Cerrar">&times;</button>
+
+        <!-- Vista: iniciar sesion -->
+        <div id="vistaLogin" class="vista">
+
+            <h2>Iniciar sesión</h2>
+            <p class="subtitulo">Accedé con tu cuenta institucional</p>
+
+            <form id="loginForm" novalidate>
+
+                <div class="campo">
+                    <label for="usuario">Usuario</label>
+                    <div class="campo-wrap">
+                        <input type="text" id="usuario" placeholder="Ingresá tu usuario" autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="password">Contraseña</label>
+                    <div class="campo-wrap">
+                        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+                        <button type="button" class="toggle-pass" id="togglePass">Mostrar</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login" id="submitBtn" disabled>Ingresar</button>
+                <div class="feedback-form" id="formFeedback"></div>
+
+            </form>
+
+            <p class="cambiar-vista">
+                ¿No tenés cuenta?
+                <button type="button" class="link-vista" id="irARegistro">Registrate</button>
+            </p>
+
+            <p class="aviso">
+                Las credenciales están definidas directamente en el código (uso educativo).
+                No es un sistema de autenticación seguro para un entorno real.
+            </p>
+
+        </div>
+
+        <!-- Vista: crear cuenta -->
+        <div id="vistaRegistro" class="vista oculta">
+
+            <h2>Crear cuenta</h2>
+            <p class="subtitulo">Registrate para poder iniciar sesión</p>
+
+            <form id="registroForm" novalidate>
+
+                <div class="campo">
+                    <label for="regUsuario">Usuario</label>
+                    <div class="campo-wrap">
+                        <input type="text" id="regUsuario" placeholder="Elegí un usuario" autocomplete="username">
+                    </div>
+                    <div class="error-msg" id="regUsuarioError"></div>
+                </div>
+
+                <div class="campo">
+                    <label for="regPassword">Contraseña</label>
+                    <div class="campo-wrap">
+                        <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+                        <button type="button" class="toggle-pass" id="toggleRegPass">Mostrar</button>
+                    </div>
+                    <div class="error-msg" id="regPasswordError"></div>
+                </div>
+
+                <div class="campo">
+                    <label for="regConfirmar">Confirmar contraseña</label>
+                    <div class="campo-wrap">
+                        <input type="password" id="regConfirmar" placeholder="Repetí la contraseña" autocomplete="new-password">
+                        <button type="button" class="toggle-pass" id="toggleRegConfirmar">Mostrar</button>
+                    </div>
+                    <div class="error-msg" id="regConfirmarError"></div>
+                </div>
+
+                <button type="submit" class="btn-login" id="registroBtn">Crear cuenta</button>
+                <div class="feedback-form" id="registroFeedback"></div>
+
+            </form>
+
+            <p class="cambiar-vista">
+                ¿Ya tenés cuenta?
+                <button type="button" class="link-vista" id="irALogin">Iniciar sesión</button>
+            </p>
+
+            <p class="aviso">
+                Las cuentas creadas se guardan solo en la memoria del navegador:
+                si recargás la página, se pierden.
+            </p>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+function renderizarCelda(titulo,texto,imagen,idCelda){
+
+    document.getElementById(idCelda).innerHTML = `
+        <img src="${imagen}" alt="${titulo}">
+        <h3 class="panel-titulo">${titulo}</h3>
+        <div class="panel-texto">${texto}</div>
+    `;
+}
+
+renderizarCelda(
+    "Taller de Programación",
+    "Los estudiantes desarrollan proyectos utilizando HTML, CSS y JavaScript. Durante las clases aprenden a diseñar páginas web modernas, crear interfaces atractivas y resolver problemas mediante programación.",
+    "Assets/programacion.jpg",
+    "celda1"
+);
+
+renderizarCelda(
+    "Prácticas Profesionalizantes",
+    "Las prácticas permiten a los alumnos aplicar los conocimientos adquiridos en situaciones reales, fortaleciendo habilidades técnicas, responsabilidad y trabajo en equipo.",
+    "Assets/practicas.jpg",
+    "celda2"
+);
+
+renderizarCelda(
+    "Laboratorio de Electrónica",
+    "En el laboratorio los estudiantes realizan experiencias con circuitos, componentes electrónicos y sistemas automatizados, integrando teoría y práctica.",
+    "Assets/electronica.jpg",
+    "celda3"
+);
+
+renderizarCelda(
+    "Proyectos Institucionales",
+    "La escuela impulsa actividades tecnológicas, científicas y comunitarias que fomentan la creatividad, la innovación y el compromiso de los estudiantes.",
+    "Assets/proyecto.jpg",
+    "celda4"
+);
+
+/* ==================== USUARIOS VALIDOS ====================
+   Cuentas iniciales. Las nuevas cuentas creadas desde el
+   formulario de registro se agregan a este mismo array,
+   pero solo viven en memoria mientras la pestaña está
+   abierta (se pierden al recargar la página).            */
+
+const usuariosValidos = [
+    { usuario: "admin",     clave: "Malvinas2026" },
+    { usuario: "profesor",  clave: "Tecnica123"   }
+];
+
+/* ==================== ESTADO DE SESION ==================== */
+
+let sesionActiva = false;
+let usuarioActual = null;
+
+/* ==================== ELEMENTOS ==================== */
+
+const abrirLoginBtn = document.getElementById('abrirLogin');
+const textoBtnLogin = document.getElementById('textoBtnLogin');
+const modalOverlay = document.getElementById('modalOverlay');
+const cerrarLoginBtn = document.getElementById('cerrarLogin');
+
+const vistaLogin = document.getElementById('vistaLogin');
+const vistaRegistro = document.getElementById('vistaRegistro');
+const irARegistroBtn = document.getElementById('irARegistro');
+const irALoginBtn = document.getElementById('irALogin');
+
+const usuarioInput = document.getElementById('usuario');
+const passwordInput = document.getElementById('password');
+const submitBtn = document.getElementById('submitBtn');
+const formFeedback = document.getElementById('formFeedback');
+const togglePass = document.getElementById('togglePass');
+const form = document.getElementById('loginForm');
+
+const regUsuarioInput = document.getElementById('regUsuario');
+const regPasswordInput = document.getElementById('regPassword');
+const regConfirmarInput = document.getElementById('regConfirmar');
+const regUsuarioError = document.getElementById('regUsuarioError');
+const regPasswordError = document.getElementById('regPasswordError');
+const regConfirmarError = document.getElementById('regConfirmarError');
+const registroFeedback = document.getElementById('registroFeedback');
+const toggleRegPass = document.getElementById('toggleRegPass');
+const toggleRegConfirmar = document.getElementById('toggleRegConfirmar');
+const registroForm = document.getElementById('registroForm');
+
+/* ==================== MODAL ==================== */
+
+function abrirModal(){
+    modalOverlay.classList.add('abierto');
+    document.body.style.overflow = 'hidden';
+    usuarioInput.focus();
+}
+
+function cerrarModal(){
+    modalOverlay.classList.remove('abierto');
+    document.body.style.overflow = '';
+}
+
+function mostrarVista(vista){
+    if(vista === 'login'){
+        vistaLogin.classList.remove('oculta');
+        vistaRegistro.classList.add('oculta');
+    } else {
+        vistaRegistro.classList.remove('oculta');
+        vistaLogin.classList.add('oculta');
+    }
+}
+
+abrirLoginBtn.addEventListener('click', () => {
+    if(sesionActiva){
+        // Cerrar sesion
+        sesionActiva = false;
+        usuarioActual = null;
+        actualizarBotonFlotante();
+        formFeedback.textContent = '';
+        form.reset();
+        actualizarEstadoBoton();
+    } else {
+        mostrarVista('login');
+        abrirModal();
+    }
+});
+
+cerrarLoginBtn.addEventListener('click', cerrarModal);
+
+modalOverlay.addEventListener('click', (e) => {
+    if(e.target === modalOverlay) cerrarModal();
+});
+
+document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && modalOverlay.classList.contains('abierto')) cerrarModal();
+});
+
+irARegistroBtn.addEventListener('click', () => {
+    registroFeedback.textContent = '';
+    mostrarVista('registro');
+});
+
+irALoginBtn.addEventListener('click', () => {
+    formFeedback.textContent = '';
+    mostrarVista('login');
+});
+
+/* ==================== LOGIN ==================== */
+
+function actualizarBotonFlotante(){
+    textoBtnLogin.textContent = sesionActiva
+        ? `Cerrar sesión (${usuarioActual})`
+        : 'Iniciar sesión';
+}
+
+function actualizarEstadoBoton(){
+    const hayUsuario = usuarioInput.value.trim() !== '';
+    const hayClave = passwordInput.value !== '';
+    submitBtn.disabled = !(hayUsuario && hayClave);
+}
+
+function limpiarErroresLogin(){
+    usuarioInput.classList.remove('invalido');
+    passwordInput.classList.remove('invalido');
+    formFeedback.textContent = '';
+}
+
+usuarioInput.addEventListener('input', () => {
+    actualizarEstadoBoton();
+    limpiarErroresLogin();
+});
+
+passwordInput.addEventListener('input', () => {
+    actualizarEstadoBoton();
+    limpiarErroresLogin();
+});
+
+togglePass.addEventListener('click', () => {
+    const esPassword = passwordInput.type === 'password';
+    passwordInput.type = esPassword ? 'text' : 'password';
+    togglePass.textContent = esPassword ? 'Ocultar' : 'Mostrar';
+});
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const usuario = usuarioInput.value.trim();
+    const clave = passwordInput.value;
+
+    const encontrado = usuariosValidos.find(
+        u => u.usuario === usuario && u.clave === clave
+    );
+
+    if(encontrado){
+        sesionActiva = true;
+        usuarioActual = encontrado.usuario;
+
+        formFeedback.textContent = `Bienvenido, ${usuarioActual}.`;
+        formFeedback.className = 'feedback-form exito';
+
+        actualizarBotonFlotante();
+
+        setTimeout(() => {
+            cerrarModal();
+            form.reset();
+            actualizarEstadoBoton();
+        }, 1100);
+
+    } else {
+        usuarioInput.classList.add('invalido');
+        passwordInput.classList.add('invalido');
+        formFeedback.textContent = 'Usuario o contraseña incorrectos.';
+        formFeedback.className = 'feedback-form error';
+    }
+});
+
+/* ==================== REGISTRO ==================== */
+
+function limpiarErroresRegistro(){
+    regUsuarioInput.classList.remove('invalido');
+    regPasswordInput.classList.remove('invalido');
+    regConfirmarInput.classList.remove('invalido');
+    regUsuarioError.textContent = '';
+    regPasswordError.textContent = '';
+    regConfirmarError.textContent = '';
+    registroFeedback.textContent = '';
+}
+
+[regUsuarioInput, regPasswordInput, regConfirmarInput].forEach(input => {
+    input.addEventListener('input', limpiarErroresRegistro);
+});
+
+toggleRegPass.addEventListener('click', () => {
+    const esPassword = regPasswordInput.type === 'password';
+    regPasswordInput.type = esPassword ? 'text' : 'password';
+    toggleRegPass.textContent = esPassword ? 'Ocultar' : 'Mostrar';
+});
+
+toggleRegConfirmar.addEventListener('click', () => {
+    const esPassword = regConfirmarInput.type === 'password';
+    regConfirmarInput.type = esPassword ? 'text' : 'password';
+    toggleRegConfirmar.textContent = esPassword ? 'Ocultar' : 'Mostrar';
+});
+
+registroForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    limpiarErroresRegistro();
+
+    const usuario = regUsuarioInput.value.trim();
+    const clave = regPasswordInput.value;
+    const confirmar = regConfirmarInput.value;
+    let valido = true;
+
+    if(usuario === ''){
+        regUsuarioError.textContent = 'Ingresá un usuario.';
+        regUsuarioInput.classList.add('invalido');
+        valido = false;
+    } else if(usuariosValidos.some(u => u.usuario.toLowerCase() === usuario.toLowerCase())){
+        regUsuarioError.textContent = 'Ese usuario ya existe.';
+        regUsuarioInput.classList.add('invalido');
+        valido = false;
+    }
+
+    if(clave.length < 6){
+        regPasswordError.textContent = 'Mínimo 6 caracteres.';
+        regPasswordInput.classList.add('invalido');
+        valido = false;
+    }
+
+    if(confirmar === '' || confirmar !== clave){
+        regConfirmarError.textContent = 'Las contraseñas no coinciden.';
+        regConfirmarInput.classList.add('invalido');
+        valido = false;
+    }
+
+    if(!valido) return;
+
+    usuariosValidos.push({ usuario, clave });
+
+    registroFeedback.textContent = `Cuenta creada para ${usuario}. Ya podés iniciar sesión.`;
+    registroFeedback.className = 'feedback-form exito';
+
+    setTimeout(() => {
+        registroForm.reset();
+        registroFeedback.textContent = '';
+        mostrarVista('login');
+        usuarioInput.value = usuario;
+        actualizarEstadoBoton();
+        passwordInput.focus();
+    }, 1400);
+});
+
+</script>
+
+</body>
+</html>

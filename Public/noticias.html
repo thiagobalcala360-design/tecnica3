@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noticias - EEST Nº3 Islas Malvinas</title>
+    <link rel="stylesheet" href="Styles/hi.css">
+    
+    <style>
+        /* ==================== ESTILOS DE LA PANCARTA ==================== */
+        #pancarta {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            backdrop-filter: none !important;
+        }
+
+        /* ---- Tabla / cuadros de noticias ---- */
+        .cuadro {
+            width: 100%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background: white;
+            border: 14px double var(--accent-blue);
+            box-shadow: 0 20px 45px rgba(10, 24, 40, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            table-layout: fixed;
+        }
+
+        .cuadro td {
+            width: 50%;
+            padding: 60px 25px;
+            border: 10px double var(--accent-blue);
+            background: linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.96),
+                rgba(240, 245, 250, 0.92)
+            );
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            transition: 0.3s;
+            word-break: break-word;
+            box-sizing: border-box;
+            font-size: clamp(1rem, 3vw, 1.6rem);
+            font-weight: bold;
+            color: var(--accent-blue);
+            min-height: 260px;
+            height: 260px;
+        }
+
+        .cuadro td:hover {
+            background: linear-gradient(180deg, var(--accent-gold), #f0d9a0);
+            color: #103b66;
+        }
+
+        .cuadro td img {
+            display: block;
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            object-fit: cover;
+            margin: 0 auto 20px auto;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ---- Panel lateral (desktop: desliza desde la derecha) ---- */
+        .panel-lateral {
+            position: fixed;
+            right: -520px;
+            top: 130px;
+            width: 460px;
+            max-width: calc(100vw - 24px);
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+            background: var(--surface-strong);
+            border: 3px solid var(--accent-blue);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 20px 45px rgba(10, 24, 40, 0.3);
+            transition: right 0.5s ease, opacity 0.5s ease;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .panel-lateral.activo {
+            right: 20px;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* En mobile: modal centrado en vez de deslizante lateral */
+        @media (max-width: 600px) {
+            .panel-lateral {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                right: auto;
+                transform: translate(-50%, -40%);
+                width: calc(100vw - 32px);
+                max-width: 420px;
+                max-height: 80vh;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+            }
+
+            .panel-lateral.activo {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            /* Fondo oscuro detrás del modal en mobile */
+            .panel-lateral.activo::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.45);
+                z-index: -1;
+            }
+
+            /* Cuadros apilados en mobile */
+            .cuadro {
+                border-radius: 12px;
+            }
+
+            .cuadro,
+            .cuadro tbody,
+            .cuadro tr {
+                display: block;
+                width: 100%;
+            }
+
+            .cuadro tr {
+                display: flex;
+                gap: 0;
+            }
+
+            .cuadro td {
+                flex: 1 1 0;
+                width: auto;
+                padding: 20px 10px;
+                font-size: 1.1rem;
+            }
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            text-align: left;
+        }
+
+        .btn-cerrar-panel {
+            background: none;
+            border: 2px solid rgba(16, 59, 102, 0.3);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-blue);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .btn-cerrar-panel:hover {
+            background: rgba(211, 47, 47, 0.1);
+            border-color: #d32f2f;
+            color: #d32f2f;
+        }
+
+        .globo {
+            background: rgba(255,255,255,0.95);
+            border: 3px solid var(--accent-gold);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        #textoActual {
+            width: 100%;
+            box-sizing: border-box;
+            resize: none;
+            overflow: hidden;
+            /* Sin min-height: el scrollHeight arranca en 0 cuando está vacío */
+        }
+
+        .btn-adjuntar {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 12px 20px;
+            border: 2px solid var(--accent-blue);
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .btn-adjuntar:hover {
+            background-color: #d0d0d0;
+        }
+
+        .navegacion-panel {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-anterior, .btn-siguiente {
+            flex: 1;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-anterior { background: #666; color: white; }
+        .btn-siguiente { background: var(--accent-blue); color: white; }
+
+        .botones-zoom {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 25px 0;
+        }
+
+        .btn-principal, #btn-menos {
+            padding: 12px 26px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+
+        .btn-principal { background: var(--accent-gold); color: white; }
+        #btn-menos { background: #d32f2f; color: white; }
+
+        .celda-borrado {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { background-color: rgba(211, 47, 47, 0.2); }
+            50% { background-color: rgba(211, 47, 47, 0.4); }
+        }
+
+        /* ==================== NAVBAR RESPONSIVE ==================== */
+        /* Aseguramos que el header nunca corte los ítems */
+        .header-container {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .nav-links {
+            flex-wrap: wrap;
+            gap: 4px 6px;
+        }
+
+        .nav-links li a {
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 10px 12px;
+            }
+
+            .nav-links {
+                justify-content: center;
+                padding: 6px 0 4px;
+            }
+
+            .nav-links li a {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .nav-links li a {
+                font-size: 0.78rem;
+                padding: 5px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-container">
+            <img src="Assets/tecnica3.jpg" alt="Logo del colegio" class="logo">
+            <h1>EEST Nº3 "Islas Malvinas"</h1>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="galeria.html">Galería</a></li>
+                    <li><a href="noticias.html" class="is-active">Noticias</a></li>
+                    <li><a href="CONTACTO.HTML">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==================== PANCARTA DE IDEAS ==================== -->
+    <section id="pancarta" class="section no-hover">
+        <div class="container">
+            <h2>Pancarta de Ideas</h2>
+            <p style="text-align:center; margin-bottom: 30px;">
+                Haz clic en las celdas para agregar ideas • Usa el botón "-" para modo borrado
+            </p>
+
+            <table class="cuadro" id="tabla">
+                <tr>
+                    <td id="celda1" onclick="editarCelda(1)">1</td>
+                    <td id="celda2" onclick="editarCelda(2)">2</td>
+                </tr>
+                <tr>
+                    <td id="celda3" onclick="editarCelda(3)">3</td>
+                    <td id="celda4" onclick="editarCelda(4)">4</td>
+                </tr>
+            </table>
+
+            <div class="botones-zoom">
+                <button class="btn-principal" onclick="iniciarEdicion()">+</button>
+                <button id="btn-menos" onclick="limpiarTodo()">−</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Panel Lateral -->
+    <div class="panel-lateral" id="panelLateral">
+
+        <div class="panel-header">
+            <h2 id="tituloPaso">Paso <span id="numeroPaso">1</span> de 4</h2>
+            <button class="btn-cerrar-panel" onclick="cerrarPanel()" title="Cerrar sin guardar">✕</button>
+        </div>
+        
+        <div class="globo">
+            <label id="labelParte">Arriba Izquierda</label>
+            <textarea id="textoActual" placeholder="Escribe aquí tu idea..."></textarea>
+            <div class="contador" id="contador">0 / 6 renglones</div>
+        </div>
+
+        <div class="contenedor-adjuntar">
+            <label for="input-imagen" class="btn-adjuntar">Adjuntar Imagen</label>
+            <input type="file" id="input-imagen" accept="image/*" style="display: none;">
+            <span id="nombre-archivo" class="texto-archivo">Ningún archivo seleccionado</span>
+        </div>
+
+        <div class="navegacion-panel">
+            <button class="btn-anterior" id="btnAnterior" onclick="anteriorPaso()" style="display:none;">← Anterior</button>
+            <button class="btn-siguiente" id="btnSiguiente" onclick="siguientePaso()">Siguiente →</button>
+        </div>
+    </div>
+
+    <script src="ui.js"></script>
+    <script>
+        // ==================== JAVASCRIPT DE LA PANCARTA ====================
+        let pasoActual = 1;
+        let textos = ["", "", "", ""];
+        let imagenes = ["", "", "", ""];
+        const MAX_RENGLONES = 6;
+        let modoBorradoActivo = false;
+
+        // Copias temporales para poder descartar cambios al cerrar con X
+        let textosTmp = ["", "", "", ""];
+        let imagenesTmp = ["", "", "", ""];
+
+        function iniciarEdicion() {
+            pasoActual = 1;
+            // Guardamos copia del estado actual antes de editar
+            textosTmp = [...textos];
+            imagenesTmp = [...imagenes];
+            document.getElementById('panelLateral').classList.add('activo');
+            actualizarPaso();
+        }
+
+        function editarCelda(num) {
+            if (modoBorradoActivo) return;
+            pasoActual = num;
+            // Guardamos copia del estado actual antes de editar
+            textosTmp = [...textos];
+            imagenesTmp = [...imagenes];
+            document.getElementById('panelLateral').classList.add('activo');
+            actualizarPaso();
+        }
+
+        function cerrarPanel() {
+            // Restaura el estado original descartando cualquier cambio no guardado
+            textos = [...textosTmp];
+            imagenes = [...imagenesTmp];
+            // Re-renderiza todas las celdas con los datos originales
+            for (let i = 1; i <= 4; i++) renderizarCelda(i);
+            document.getElementById('panelLateral').classList.remove('activo');
+        }
+
+        function actualizarPaso() {
+            document.getElementById('numeroPaso').textContent = pasoActual;
+            document.getElementById('labelParte').textContent = getPosicion(pasoActual);
+            
+            const textarea = document.getElementById('textoActual');
+            textarea.value = textos[pasoActual-1] || "";
+            
+            const nombreArchivo = document.getElementById('nombre-archivo');
+            if (imagenes[pasoActual-1]) {
+                nombreArchivo.textContent = "Imagen cargada en este paso";
+            } else {
+                nombreArchivo.textContent = "Ningún archivo seleccionado";
+            }
+            
+            textarea.focus();
+            actualizarContador();
+
+            document.getElementById('btnAnterior').style.display = pasoActual > 1 ? 'inline-block' : 'none';
+        }
+
+        function getPosicion(n) {
+            const posiciones = ["Arriba Izquierda", "Arriba Derecha", "Abajo Izquierda", "Abajo Derecha"];
+            return posiciones[n-1];
+        }
+
+        // ---- Conteo de renglones visuales con div espejo ----
+        // Usamos un div invisible con las mismas propiedades que el textarea
+        // para medir cuántas líneas ocupa el texto real (incluyendo wrap).
+        let divEspejo = null;
+
+        function crearDivEspejo(textarea) {
+            if (divEspejo) return;
+            const st = window.getComputedStyle(textarea);
+            divEspejo = document.createElement('div');
+            divEspejo.style.cssText = `
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+                visibility: hidden;
+                pointer-events: none;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                width: ${textarea.clientWidth}px;
+                font-family: ${st.fontFamily};
+                font-size: ${st.fontSize};
+                font-weight: ${st.fontWeight};
+                line-height: ${st.lineHeight};
+                letter-spacing: ${st.letterSpacing};
+                padding: ${st.paddingTop} ${st.paddingRight} ${st.paddingBottom} ${st.paddingLeft};
+                border: ${st.border};
+                box-sizing: border-box;
+            `;
+            document.body.appendChild(divEspejo);
+        }
+
+        function contarRenglonesVisuales(textarea) {
+            // Sin texto → siempre 0
+            if (!textarea.value) return 0;
+
+            crearDivEspejo(textarea);
+
+            const st = window.getComputedStyle(textarea);
+            // Actualizamos el ancho por si cambió (ej: rotación de pantalla)
+            divEspejo.style.width = textarea.clientWidth + 'px';
+
+            // Copiamos el texto al espejo para medir su altura real
+            divEspejo.textContent = textarea.value;
+            const altoCont = divEspejo.scrollHeight;
+
+            const lineHeight = parseFloat(st.lineHeight) || parseFloat(st.fontSize) * 1.4;
+            return Math.max(1, Math.round(altoCont / lineHeight));
+        }
+
+        function actualizarContador() {
+            const textarea = document.getElementById('textoActual');
+            const lineas = contarRenglonesVisuales(textarea);
+
+            const contador = document.getElementById('contador');
+            contador.textContent = `${lineas} / ${MAX_RENGLONES} renglones`;
+
+            if (lineas >= MAX_RENGLONES) contador.style.color = '#d32f2f';
+            else if (lineas >= MAX_RENGLONES - 1) contador.style.color = '#ff9800';
+            else contador.style.color = '#888';
+        }
+
+        function limitarRenglones() {
+            const textarea = document.getElementById('textoActual');
+
+            if (contarRenglonesVisuales(textarea) > MAX_RENGLONES) {
+                // Recortamos carácter a carácter usando el textarea real
+                while (textarea.value.length > 0 && contarRenglonesVisuales(textarea) > MAX_RENGLONES) {
+                    textarea.value = textarea.value.slice(0, -1);
+                }
+            }
+            actualizarContador();
+        }
+
+        function renderizarCelda(paso) {
+            const celda = document.getElementById(`celda${paso}`);
+            if (!celda) return;
+
+            if (!textos[paso-1] && !imagenes[paso-1]) {
+                celda.innerHTML = paso;
+                return;
+            }
+
+            let contenidoHTML = `<div style="font-size:2rem; opacity:0.25; margin-bottom:8px;">${paso}</div>`;
+            
+            if (imagenes[paso-1]) {
+                contenidoHTML += `<img src="${imagenes[paso-1]}" style="max-width:95%; max-height:120px; object-fit:contain; display:block; margin:0 auto 10px auto; border-radius:6px;">`;
+            }
+            
+            if (textos[paso-1]) {
+                contenidoHTML += `<div style="font-size:1.15rem; word-break:break-word; white-space:pre-wrap;">${textos[paso-1]}</div>`;
+            }
+            
+            celda.innerHTML = contenidoHTML;
+        }
+
+        function guardarTextoActual() {
+            const textarea = document.getElementById('textoActual');
+            textos[pasoActual-1] = textarea.value.trim();
+            renderizarCelda(pasoActual);
+        }
+
+        function siguientePaso() {
+            guardarTextoActual();
+            // Al avanzar, actualizamos también el backup para que X no deshaga lo ya confirmado
+            textosTmp = [...textos];
+            imagenesTmp = [...imagenes];
+            if (pasoActual < 4) {
+                pasoActual++;
+                actualizarPaso();
+            } else {
+                document.getElementById('panelLateral').classList.remove('activo');
+                alert("✅ ¡Pancarta completada!");
+            }
+        }
+
+        function anteriorPaso() {
+            if (pasoActual > 1) {
+                guardarTextoActual();
+                // Al retroceder, actualizamos también el backup
+                textosTmp = [...textos];
+                imagenesTmp = [...imagenes];
+                pasoActual--;
+                actualizarPaso();
+            }
+        }
+
+        function limpiarTodo() {
+            const botonMenos = document.getElementById('btn-menos');
+            const celdas = [
+                document.getElementById('celda1'),
+                document.getElementById('celda2'),
+                document.getElementById('celda3'),
+                document.getElementById('celda4')
+            ];
+
+            modoBorradoActivo = !modoBorradoActivo;
+
+            if (modoBorradoActivo) {
+                botonMenos.style.outline = "3px solid #ff0000";
+                botonMenos.textContent = "Terminar -";
+
+                celdas.forEach((celda, indice) => {
+                    if (celda) {
+                        celda.style.cursor = 'pointer';
+                        celda.style.backgroundColor = 'rgba(211, 47, 47, 0.2)'; 
+                        celda.classList.add('celda-borrado'); 
+
+                        celda.onclick = function() {
+                            if (modoBorradoActivo) {
+                                textos[indice] = "";   
+                                imagenes[indice] = "";  
+                                celda.innerHTML = indice + 1; 
+                                
+                                if (pasoActual === (indice + 1)) {
+                                    document.getElementById('textoActual').value = "";
+                                    document.getElementById('nombre-archivo').textContent = "Ningún archivo seleccionado";
+                                    actualizarContador();
+                                }
+                            }
+                        };
+                    }
+                });
+            } else {
+                desactivarModoBorrado(celdas, botonMenos);
+            }
+        }
+
+        function desactivarModoBorrado(celdas, botonMenos) {
+            modoBorradoActivo = false;
+            botonMenos.style.outline = "none";
+            botonMenos.textContent = "-";
+
+            celdas.forEach((celda, indice) => {
+                if (celda) {
+                    celda.style.cursor = 'pointer';
+                    celda.style.backgroundColor = ''; 
+                    celda.classList.remove('celda-borrado');     
+
+                    celda.onclick = function() {
+                        editarCelda(indice + 1);
+                    };
+                }
+            });
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            const textarea = document.getElementById('textoActual');
+            
+            textarea.addEventListener('input', () => {
+                limitarRenglones();
+                textos[pasoActual-1] = textarea.value;
+                renderizarCelda(pasoActual);
+            });
+
+            textarea.addEventListener('keyup', limitarRenglones);
+            textarea.addEventListener('paste', () => setTimeout(limitarRenglones, 10));
+
+            const inputImagen = document.getElementById('input-imagen');
+
+            inputImagen.addEventListener('change', () => {
+                if (inputImagen.files.length > 0) {
+                    const archivo = inputImagen.files[0];
+                    document.getElementById('nombre-archivo').textContent = archivo.name;
+
+                    const lector = new FileReader();
+                    lector.onload = function(e) {
+                        imagenes[pasoActual-1] = e.target.result;
+                        renderizarCelda(pasoActual); 
+                    };
+                    lector.readAsDataURL(archivo);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
