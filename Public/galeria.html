@@ -1,56 +1,82 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>EEST Nº3 Islas Malvinas</title>
-    <link rel="stylesheet" href="Styles/hi.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galería - EEST N°3 Islas Malvinas</title>
+  <link rel="stylesheet" href="Styles/hi.css">
+  <style>
+    .dropdown-menu { background: linear-gradient(90deg, rgba(6, 26, 52, 0.98) 0%, rgba(21, 72, 121, 0.95) 58%, rgba(47, 140, 184, 0.82) 100%); border-color: rgba(117, 207, 239, 0.4); left: 50%; transform: translateX(-50%) translateY(8px) scale(0.98); transform-origin: top center; }
+    .dropdown-menu li + li { margin-top: 6px; }
+    .dropdown-menu li a { display: block; padding: 8px 16px; color: #fff; }
+    .dropdown-menu li a:hover { background: rgba(117, 207, 239, 0.28); color: #fff; }
+    .nav-dropdown:not(.is-closing):hover .dropdown-menu,
+    .nav-dropdown.is-open .dropdown-menu,
+    .nav-dropdown:not(.is-closing):focus-within .dropdown-menu { transform: translateX(-50%) translateY(0) scale(1); }
+  </style>
 </head>
 <body>
+  <header>
+    <div class="container header-container">
+      <img src="Assets/tecnica3.png" alt="Logo del colegio" class="logo">
+      <h1>E.E.S.T N°3 "Islas Malvinas"</h1>
+      <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Inicio</a></li>
+          <li class="nav-dropdown">
+            <button class="dropdown-toggle" type="button" aria-expanded="false">Especialidades</button>
+            <ul class="dropdown-menu">
+              <li><a href="informatica.html">Programación</a></li>
+              <li><a href="construcciones.html">Construcciones</a></li>
+              <li><a href="turismo.html">Turismo</a></li>
+            </ul>
+          </li>
+          <li><a href="galeria.html">Galería</a></li>
+          <li><a href="noticias.html">Noticias</a></li>
+          <li><a href="CONTACTO.HTML">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-    <header>
-        <div class="container header-container">
-            <img src="Assets/tecnica3.jpg" alt="Logo del colegio" class="logo">
-            <h1>EEST Nº3 "Islas Malvinas"</h1>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Inicio</a></li>
-                    <li><a href="galeria.html">Galería</a></li>
-                    <li><a href="noticias1.html">Noticias</a></li>
-                    <li><a href="CONTACTO.HTML">Contacto</a></li>
-                </ul>
+  <section id="galeria" class="section no-hover gallery-section">
+    <div class="container gallery-shell">
+      <div class="gallery-copy">
+        <p class="section-kicker">Vida escolar</p>
+        <h2>Galería</h2>
+      </div>
 
-            </nav>
+      <div class="gallery-stage" data-gallery>
+        <div class="gallery-frame">
+          <img id="imagen-carrusel" src="Assets/imagen1.jpg" alt="Patio y actividades de la escuela" data-gallery-image>
+          <div class="gallery-caption">
+            <span data-gallery-count>01 / 04</span>
+            <strong data-gallery-title>Comunidad técnica</strong>
+          </div>
+          <button class="gallery-control gallery-prev" type="button" aria-label="Imagen anterior" data-gallery-prev>‹</button>
+          <button class="gallery-control gallery-next" type="button" aria-label="Imagen siguiente" data-gallery-next>›</button>
         </div>
-    </header>
-    <!-- GALERÍA -->
-    <section id="galeria" class="section no-hover">
-        <div class="container">
-            <h2>Galería</h2>
-            <div class="carousel">
-                <button onclick="cambiarImagen(-1)">❮</button>
-                <img id="imagen-carrusel" src="Assets/imagen1.jpg" alt="Galería" style="max-width: 600px; border-radius: 12px;">
-                <button onclick="cambiarImagen(1)">❯</button>
-            </div>
-            <div class="puntos" id="indicadores"></div>
+
+        <div class="gallery-toolbar">
+          <div class="gallery-progress" aria-hidden="true"><span data-gallery-progress></span></div>
+          <div class="gallery-thumbs" aria-label="Seleccionar imagen">
+            <button class="gallery-thumb is-active" type="button" data-gallery-thumb="0" aria-label="Ver imagen 1"><img src="Assets/imagen1.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-gallery-thumb="1" aria-label="Ver imagen 2"><img src="Assets/imagen2.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-gallery-thumb="2" aria-label="Ver imagen 3"><img src="Assets/imagen3.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-gallery-thumb="3" aria-label="Ver imagen 4"><img src="Assets/imagen4.jpg" alt=""></button>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <script>
-        const imagenesGaleria = [
-            'Assets/imagen1.jpg',
-            'Assets/imagen2.jpg',
-            'Assets/imagen3.jpg',
-            'Assets/imagen4.jpg'
-        ];
-        let indiceGaleria = 0;
+  <footer>
+    <p>&copy; 2025 E.E.S.T N°3 "Islas Malvinas" - Remedios de Escalada, Lanús</p>
+    <p><em>"Enseñamos profesiones, inspiramos personas."</em></p>
+    <p class="footer-credit">Hecha con <span class="heart">♥</span> por los cursos de informática 2025-actualidad</p>
+  </footer>
 
-        function cambiarImagen(direccion) {
-            indiceGaleria = (indiceGaleria + direccion + imagenesGaleria.length) % imagenesGaleria.length;
-            document.getElementById('imagen-carrusel').src = imagenesGaleria[indiceGaleria];
-        }
-    </script>
-    <script src="ui.js"></script>
+  <script src="ui.js"></script>
 </body>
 </html>

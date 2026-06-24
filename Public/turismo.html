@@ -1,87 +1,101 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Técnico en Turismo</title>
-    <link rel="stylesheet" href="Styles/hi.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Técnico en Servicios Turísticos - EEST N°3 Islas Malvinas</title>
+  <link rel="stylesheet" href="Styles/hi.css">
+  <style>
+    .dropdown-menu { background: linear-gradient(90deg, rgba(6, 26, 52, 0.98) 0%, rgba(21, 72, 121, 0.95) 58%, rgba(47, 140, 184, 0.82) 100%); border-color: rgba(117, 207, 239, 0.4); left: 50%; transform: translateX(-50%) translateY(8px) scale(0.98); transform-origin: top center; }
+    .dropdown-menu li + li { margin-top: 6px; }
+    .dropdown-menu li a { display: block; padding: 8px 16px; color: #fff; }
+    .dropdown-menu li a:hover { background: rgba(117, 207, 239, 0.28); color: #fff; }
+    .nav-dropdown:not(.is-closing):hover .dropdown-menu,
+    .nav-dropdown.is-open .dropdown-menu,
+    .nav-dropdown:not(.is-closing):focus-within .dropdown-menu { transform: translateX(-50%) translateY(0) scale(1); }
+  </style>
 </head>
 <body>
-
-    <header>
-        <div class="container header-container">
-            <img src="Assets/tecnica3.jpg" alt="Logo del colegio" class="logo">
-            <h1>E.E.S.T Nº3 "Islas Malvinas"</h1>
-
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Inicio</a></li>
-                    <li><a href="galeria.html">Galería</a></li>
-                    <li><a href="noticias1.html">Noticias</a></li>
-                    <li><a href="CONTACTO.HTML">Contacto</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-    <section class="contenedor-propuesta">
-        <h2>Técnico en Turismo</h2>
-        <div class="separador"></div>
-
-        <h3>Presentación del Programa</h3>
-        <p>
-            El programa de <strong>Técnico en Turismo</strong> busca formar profesionales capaces de planificar, organizar y gestionar actividades turísticas, promoviendo el desarrollo sostenible, la preservación cultural y el crecimiento económico local y regional.
-        </p>
-
-        <h3>Objetivo General</h3>
-        <p>
-            Formar técnicos con visión integral del turismo, comprometidos con la calidad del servicio, la atención al cliente y la sostenibilidad, capaces de desempeñarse en empresas, organismos públicos y proyectos independientes.
-        </p>
-
-        <h3>Objetivos Específicos</h3>
-        <ul>
-            <li>Desarrollar habilidades para la gestión y promoción de destinos turísticos.</li>
-            <li>Fomentar la comunicación efectiva y la atención al cliente en entornos multiculturales.</li>
-            <li>Promover prácticas turísticas responsables y sostenibles.</li>
-            <li>Capacitar en el uso de herramientas tecnológicas aplicadas al turismo.</li>
-            <li>Impulsar la creatividad y el espíritu emprendedor en proyectos turísticos.</li>
+  <header>
+    <div class="container header-container">
+      <img src="Assets/tecnica3.png" alt="Logo del colegio" class="logo">
+      <h1>E.E.S.T N°3 "Islas Malvinas"</h1>
+      <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Inicio</a></li>
+          <li class="nav-dropdown">
+            <button class="dropdown-toggle" type="button" aria-expanded="false">Especialidades</button>
+            <ul class="dropdown-menu">
+              <li><a href="informatica.html">Programación</a></li>
+              <li><a href="construcciones.html">Construcciones</a></li>
+              <li><a href="turismo.html">Turismo</a></li>
+            </ul>
+          </li>
+          <li><a href="galeria.html">Galería</a></li>
+          <li><a href="noticias.html">Noticias</a></li>
+          <li><a href="CONTACTO.HTML">Contacto</a></li>
         </ul>
+      </nav>
+    </div>
+  </header>
 
-        <h3>Perfil del Egresado</h3>
-        <p>
-            El egresado será capaz de trabajar en agencias de viajes, empresas turísticas, organismos públicos o emprendimientos propios, gestionando servicios turísticos de manera eficiente y responsable. Estará preparado para:
-        </p>
-        <ul>
-            <li>Diseñar y organizar paquetes y circuitos turísticos.</li>
-            <li>Brindar información y asistencia a turistas nacionales e internacionales.</li>
-            <li>Coordinar eventos y actividades recreativas.</li>
-            <li>Promover destinos turísticos locales y regionales.</li>
-            <li>Aplicar estrategias de marketing turístico.</li>
-        </ul>
+  <section class="contenedor-propuesta">
+    <h2>Técnico en Servicios Turísticos</h2>
+    <div class="separador"></div>
 
-        <h3>Campo Laboral</h3>
-        <ul>
-            <li>Agencias de viajes y turismo.</li>
-            <li>Hoteles y alojamientos.</li>
-            <li>Organismos gubernamentales y municipales.</li>
-            <li>Centros de información turística.</li>
-            <li>Emprendimientos propios en servicios turísticos.</li>
-        </ul>
+    <h3>Una mirada al diseño curricular</h3>
+    <p>La tecnicatura en <strong>Servicios Turísticos</strong> trabaja sobre la planificación, organización, comercialización y prestación de servicios vinculados al turismo. Su enfoque integra geografía, patrimonio, comunicación, idiomas, gestión de agencias, hotelería, eventos y prácticas situadas en contextos reales de atención al visitante.</p>
 
-        <h3>Modalidad de Estudio</h3>
-        <p>
-            <strong>Modalidad:</strong> Presencial / Semipresencial / Virtual <br>
-            <strong>Duración:</strong> 2 a 3 años (según plan académico) <br>
-            <strong>Certificación:</strong> Técnico en Turismo
-        </p>
+    <h3>Contenidos centrales</h3>
+    <ul>
+      <li>Reconocimiento de recursos turísticos, patrimonio natural y cultural.</li>
+      <li>Diseño de circuitos, itinerarios, paquetes y experiencias turísticas.</li>
+      <li>Comunicación, atención al cliente, información turística e idiomas.</li>
+      <li>Gestión de agencias, alojamiento, eventos y servicios complementarios.</li>
+      <li>Turismo responsable, desarrollo local y emprendimientos turísticos.</li>
+    </ul>
 
-        <h3>Competencias Destacadas</h3>
-        <ul>
-            <li>Gestión y planificación turística.</li>
-            <li>Atención y comunicación con el cliente.</li>
-            <li>Marketing y promoción de destinos.</li>
-            <li>Idiomas y relaciones interculturales.</li>
-            <li>Responsabilidad ambiental y sostenibilidad.</li>
-        </ul>
-    </section>
-    <script src="ui.js"></script>
+    <h3>Materias y espacios destacados</h3>
+    <ul>
+      <li>Introducción al Turismo</li>
+      <li>Servicios Turísticos</li>
+      <li>Geografía Turística</li>
+      <li>Patrimonio Turístico</li>
+      <li>Comunicación Turística</li>
+      <li>Inglés</li>
+      <li>Portugués</li>
+      <li>Organización de Eventos</li>
+      <li>Agencia de Viajes</li>
+      <li>Hotelería</li>
+      <li>Marketing Turístico</li>
+      <li>Emprendimientos Productivos y Desarrollo Local</li>
+      <li>Prácticas Profesionalizantes</li>
+    </ul>
+
+    <h3>Perfil del egresado</h3>
+    <p>El egresado puede asistir en la organización y venta de servicios turísticos, orientar visitantes, colaborar en eventos, diseñar propuestas de viaje y participar en proyectos de desarrollo turístico local. Su formación combina gestión, comunicación, territorio, cultura y servicio.</p>
+
+    <h3>Salida laboral posible</h3>
+    <ul>
+      <li>Agencias de viajes, operadores turísticos y empresas de excursiones.</li>
+      <li>Hoteles, alojamientos, centros recreativos y servicios de hospitalidad.</li>
+      <li>Áreas municipales o provinciales de turismo, cultura y patrimonio.</li>
+      <li>Informante turístico, asistente de coordinación o auxiliar de eventos.</li>
+      <li>Emprendimientos de circuitos, experiencias locales o servicios para visitantes.</li>
+      <li>Continuidad académica en turismo, hotelería, guía, gestión cultural o administración.</li>
+    </ul>
+
+    <h3>Modalidad</h3>
+    <p><strong>Modalidad:</strong> Presencial <br><strong>Duración:</strong> 7 años <br><strong>Título:</strong> Técnico en Servicios Turísticos</p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 E.E.S.T N°3 "Islas Malvinas" - Remedios de Escalada, Lanús</p>
+    <p><em>"Enseñamos profesiones, inspiramos personas."</em></p>
+    <p class="footer-credit">Hecha con <span class="heart">♥</span> por los cursos de informática 2025-actualidad</p>
+  </footer>
+
+  <script src="ui.js"></script>
 </body>
 </html>
