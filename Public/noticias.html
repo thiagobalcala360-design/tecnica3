@@ -12,8 +12,6 @@
             flex-direction: column;
         }
 
-        footer { margin-top: auto; }
-
         body.news-page main {
             flex: 1;
             display: block;
@@ -243,9 +241,7 @@
         }
 
         @media (max-width: 768px) {
-            footer { margin-top: auto; }
-
-        body.news-page main {
+            body.news-page main {
                 padding: 18px 0 8px;
             }
 
@@ -288,15 +284,6 @@
             }
         }
     </style>
-  <style>
-    .dropdown-menu { background: linear-gradient(90deg, rgba(6, 26, 52, 0.98) 0%, rgba(21, 72, 121, 0.95) 58%, rgba(47, 140, 184, 0.82) 100%); border-color: rgba(117, 207, 239, 0.4); left: 50%; transform: translateX(-50%) translateY(8px) scale(0.98); transform-origin: top center; }
-    .dropdown-menu li + li { margin-top: 6px; }
-    .dropdown-menu li a { display: block; padding: 8px 16px; color: #fff; }
-    .dropdown-menu li a:hover { background: rgba(117, 207, 239, 0.28); color: #fff; }
-    .nav-dropdown:not(.is-closing):hover .dropdown-menu,
-    .nav-dropdown.is-open .dropdown-menu,
-    .nav-dropdown:not(.is-closing):focus-within .dropdown-menu { transform: translateX(-50%) translateY(0) scale(1); }
-  </style>
 </head>
 <body class="news-page">
     <header>
@@ -406,6 +393,22 @@
                 date: '2026-06-23',
                 body: 'La escuela impulsa actividades que fomentan creatividad, innovación y compromiso con la comunidad educativa.',
                 image: 'Assets/Malvinas.jpg',
+                published: true
+            },
+            {
+                id: 'construcciones',
+                title: 'Taller de Construcciones',
+                date: '2026-06-23',
+                body: 'Los estudiantes de la especialidad de Construcciones trabajan en proyectos prácticos, aprendiendo técnicas de obra, planificación y trabajo seguro en taller.',
+                image: 'Assets/imagen4.jpg',
+                published: true
+            },
+            {
+                id: 'turismo',
+                title: 'Especialidad en Turismo',
+                date: '2026-06-23',
+                body: 'Los alumnos de Turismo desarrollan competencias en planificación de viajes, atención al visitante y promoción del patrimonio cultural y natural de la región.',
+                image: 'Assets/imagen5.jpg',
                 published: true
             }
         ];

@@ -12,8 +12,6 @@
             flex-direction: column;
         }
 
-        footer { margin-top: auto; }
-
         body.news-admin-page main {
             flex: 1;
             display: block;
@@ -79,13 +77,81 @@
 
         .admin-layout {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(340px, 430px);
+            grid-template-columns: 1fr;
             gap: 18px;
             align-items: start;
         }
 
+        .admin-list.is-dimmed {
+            filter: blur(4px) saturate(0.6) brightness(0.85);
+            pointer-events: none;
+            user-select: none;
+            transition: filter 0.32s ease;
+        }
+
+        .admin-list {
+            transition: filter 0.32s ease;
+        }
+
+        .form-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 24px;
+            background: rgba(8, 20, 34, 0);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.32s ease, background 0.32s ease, visibility 0.32s ease;
+        }
+
+        .form-overlay.is-open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            background: rgba(8, 20, 34, 0.45);
+        }
+
+        .form-overlay .admin-form {
+            width: min(100%, 430px);
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+            transform: translateX(60px);
+            opacity: 0;
+            transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.36s ease;
+        }
+
+        .form-overlay.is-open .admin-form {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .form-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            border: 0;
+            border-radius: 999px;
+            width: 32px;
+            height: 32px;
+            background: #e7edf3;
+            color: var(--accent-blue);
+            font-weight: 800;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .form-close:hover {
+            background: var(--accent-gold);
+            color: #132338;
+        }
+
         .admin-list,
         .admin-form {
+            position: relative;
             border: 10px double var(--accent-blue);
             border-radius: 16px;
             background: rgba(255, 255, 255, 0.94);
@@ -235,12 +301,58 @@
             resize: vertical;
         }
 
-        .checkbox-field {
-            display: flex;
-            gap: 10px;
-            align-items: center;
+        .file-upload {
+            display: grid;
+            gap: 6px;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .file-upload-button {
+            border: 3px solid rgba(16, 59, 102, 0.2);
+            border-radius: 10px;
+            padding: 10px 11px;
+            background: #e7edf3;
             color: var(--accent-blue);
             font-weight: 800;
+            font: inherit;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .file-upload-button:hover {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        .file-upload-name {
+            color: var(--ink-soft);
+            font-size: 0.85rem;
+        }
+
+        .checkbox-field {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-blue);
+            font-weight: 800;
+            font-size: 0.88rem;
+            white-space: nowrap;
+        }
+
+        .checkbox-field input {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
         }
 
         .form-buttons {
@@ -259,9 +371,7 @@
         }
 
         @media (max-width: 900px) {
-            footer { margin-top: auto; }
-
-        body.news-admin-page main {
+            body.news-admin-page main {
                 padding: 18px 0 8px;
             }
 
@@ -282,6 +392,15 @@
             .admin-layout {
                 grid-template-columns: 1fr;
             }
+
+            .form-overlay {
+                justify-content: center;
+                padding: 16px;
+            }
+
+            .form-overlay .admin-form {
+                width: 100%;
+            }
         }
 
         @media (max-width: 560px) {
@@ -301,15 +420,6 @@
             }
         }
     </style>
-  <style>
-    .dropdown-menu { background: linear-gradient(90deg, rgba(6, 26, 52, 0.98) 0%, rgba(21, 72, 121, 0.95) 58%, rgba(47, 140, 184, 0.82) 100%); border-color: rgba(117, 207, 239, 0.4); left: 50%; transform: translateX(-50%) translateY(8px) scale(0.98); transform-origin: top center; }
-    .dropdown-menu li + li { margin-top: 6px; }
-    .dropdown-menu li a { display: block; padding: 8px 16px; color: #fff; }
-    .dropdown-menu li a:hover { background: rgba(117, 207, 239, 0.28); color: #fff; }
-    .nav-dropdown:not(.is-closing):hover .dropdown-menu,
-    .nav-dropdown.is-open .dropdown-menu,
-    .nav-dropdown:not(.is-closing):focus-within .dropdown-menu { transform: translateX(-50%) translateY(0) scale(1); }
-  </style>
 </head>
 <body class="news-admin-page">
     <header>
@@ -355,14 +465,16 @@
             </div>
 
             <div class="admin-layout">
-                <div class="admin-list">
+                <div class="admin-list" id="adminListPanel">
                     <div class="admin-list-header">
                         <h3>Publicaciones cargadas</h3>
                     </div>
                     <div id="adminList"></div>
                 </div>
 
+                <div class="form-overlay" id="formOverlay">
                 <div class="admin-form">
+                    <button class="form-close" id="closeForm" type="button" aria-label="Cerrar">✕</button>
                     <div class="admin-form-header">
                         <h3 id="formTitle">Nueva publicación</h3>
                     </div>
@@ -382,21 +494,22 @@
                         </div>
                         <div class="field">
                             <label for="postImage">Imagen</label>
-                            <input id="postImage" type="file" accept="image/*">
-                        </div>
-                        <div class="field">
-                            <label for="postImageUrl">O URL/ruta de imagen</label>
-                            <input id="postImageUrl" type="text" placeholder="Assets/imagen1.jpg">
+                            <div class="file-upload">
+                                <label class="file-upload-button" for="postImage">Adjuntar Imagen</label>
+                                <input id="postImage" type="file" accept="image/*">
+                                <span class="file-upload-name" id="postImageName">Ningún archivo seleccionado</span>
+                            </div>
                         </div>
                         <label class="checkbox-field">
-                            <input id="postPublished" type="checkbox" checked>
                             Visible en noticias publicadas
+                            <input id="postPublished" type="checkbox" checked>
                         </label>
                         <div class="form-buttons">
                             <button class="admin-button" type="submit">Guardar</button>
                             <button class="admin-button secondary" id="resetForm" type="button">Limpiar</button>
                         </div>
                     </form>
+                </div>
                 </div>
             </div>
         </section>
@@ -445,6 +558,22 @@
                 body: 'La escuela impulsa actividades que fomentan creatividad, innovación y compromiso con la comunidad educativa.',
                 image: 'Assets/Malvinas.jpg',
                 published: true
+            },
+            {
+                id: 'construcciones',
+                title: 'Taller de Construcciones',
+                date: '2026-06-23',
+                body: 'Los estudiantes de la especialidad de Construcciones trabajan en proyectos prácticos, aprendiendo técnicas de obra, planificación y trabajo seguro en taller.',
+                image: 'Assets/imagen4.jpg',
+                published: true
+            },
+            {
+                id: 'turismo',
+                title: 'Especialidad en Turismo',
+                date: '2026-06-23',
+                body: 'Los alumnos de Turismo desarrollan competencias en planificación de viajes, atención al visitante y promoción del patrimonio cultural y natural de la región.',
+                image: 'Assets/imagen5.jpg',
+                published: true
             }
         ];
 
@@ -481,7 +610,7 @@
         const postDate = document.getElementById('postDate');
         const postBody = document.getElementById('postBody');
         const postImage = document.getElementById('postImage');
-        const postImageUrl = document.getElementById('postImageUrl');
+        const postImageName = document.getElementById('postImageName');
         const postPublished = document.getElementById('postPublished');
 
         const today = () => new Date().toISOString().slice(0, 10);
@@ -491,6 +620,7 @@
             postId.value = '';
             postDate.value = today();
             postPublished.checked = true;
+            postImageName.textContent = 'Ningún archivo seleccionado';
             formTitle.textContent = 'Nueva publicación';
         };
 
@@ -521,7 +651,6 @@
 
         const getImageValue = () => new Promise((resolve) => {
             const file = postImage.files && postImage.files[0];
-            const typedUrl = postImageUrl.value.trim();
 
             if (file) {
                 const reader = new FileReader();
@@ -530,7 +659,12 @@
                 return;
             }
 
-            resolve(typedUrl || 'Assets/tecnica3.png');
+            resolve('Assets/tecnica3.png');
+        });
+
+        postImage.addEventListener('change', () => {
+            const file = postImage.files && postImage.files[0];
+            postImageName.textContent = file ? file.name : 'Ningún archivo seleccionado';
         });
 
         postForm.addEventListener('submit', async (event) => {
@@ -557,6 +691,7 @@
             saveNews(news);
             resetEditor();
             renderAdmin();
+            closeForm();
         });
 
         adminList.addEventListener('click', (event) => {
@@ -575,10 +710,11 @@
                 postTitle.value = item.title;
                 postDate.value = item.date;
                 postBody.value = item.body;
-                postImageUrl.value = item.image;
                 postPublished.checked = item.published;
                 postImage.value = '';
+                postImageName.textContent = 'Ningún archivo seleccionado';
                 formTitle.textContent = 'Editar publicación';
+                openForm();
             }
 
             if (action === 'toggle') {
@@ -594,8 +730,36 @@
             }
         });
 
-        document.getElementById('newPost').addEventListener('click', resetEditor);
+        const formOverlay = document.getElementById('formOverlay');
+        const adminListPanel = document.getElementById('adminListPanel');
+        const closeFormButton = document.getElementById('closeForm');
+
+        const openForm = () => {
+            formOverlay.classList.add('is-open');
+            adminListPanel.classList.add('is-dimmed');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeForm = () => {
+            formOverlay.classList.remove('is-open');
+            adminListPanel.classList.remove('is-dimmed');
+            document.body.style.overflow = '';
+        };
+
+        document.getElementById('newPost').addEventListener('click', () => {
+            resetEditor();
+            openForm();
+        });
         document.getElementById('resetForm').addEventListener('click', resetEditor);
+        closeFormButton.addEventListener('click', closeForm);
+        formOverlay.addEventListener('click', (event) => {
+            if (event.target === formOverlay) closeForm();
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && formOverlay.classList.contains('is-open')) {
+                closeForm();
+            }
+        });
         document.getElementById('logout').addEventListener('click', () => {
             sessionStorage.removeItem(SESSION_KEY);
             window.location.replace('noticias.html');
